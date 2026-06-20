@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Jogo educativo de matemática para crianças">
+  <title>GabQuest 🌟</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== TELA INICIAL ===== -->
+  <div id="screen-home" class="screen active">
+    <div class="home-bg">
+      <div class="sun">☀️</div>
+      <div class="cloud cloud-1">☁️</div>
+      <div class="cloud cloud-2">☁️</div>
+      <div class="cloud cloud-3">☁️</div>
+    </div>
+    <div class="home-content">
+      <h1 class="game-title">GabQuest</h1>
+      <p class="game-subtitle">Aprenda matemática se divertindo! 🎉</p>
+
+      <div class="avatar-display" id="home-avatar">🐱</div>
+      <div class="player-stats-bar">
+        <span id="home-total-stars">⭐ 0</span>
+        <span id="home-total-medals">🏅 0</span>
+        <span id="home-total-trophies">🏆 0</span>
+      </div>
+
+      <div class="home-buttons">
+        <button class="btn btn-primary btn-huge" onclick="UI.showScreen('screen-operations')">🎮 Matemática</button>
+        <button class="btn btn-primary btn-huge btn-shapes" onclick="Shapes.start()">🔷 Formas Geométricas</button>
+        <button class="btn btn-secondary" onclick="UI.showScreen('screen-progress')">🗺️ Progresso</button>
+        <button class="btn btn-secondary" onclick="UI.showScreen('screen-rewards')">🎁 Recompensas</button>
+        <button class="btn btn-secondary" onclick="UI.showScreen('screen-parents')">👨‍👩‍👧 Responsáveis</button>
+        <button class="btn btn-ghost" onclick="UI.showScreen('screen-avatar')">🐱 Avatar</button>
+      </div>
+
+      <!-- Mascote interativo -->
+      <div class="mascote" id="mascote" onclick="Mascote.speak()" title="Clique em mim!">
+        <div class="mascote-body">🦉</div>
+        <div class="mascote-bubble" id="mascote-bubble"></div>
+      </div>
+
+      <button class="sound-toggle" id="sound-toggle" onclick="Game.toggleSound()">🔊</button>
+    </div>
+  </div>
+
+  <!-- ===== TELA DE OPERAÇÕES ===== -->
+  <div id="screen-operations" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" onclick="UI.showScreen('screen-home')">← Voltar</button>
+      <h2>Escolha a operação</h2>
+    </div>
+    <div class="operations-grid">
+      <button class="op-card op-add" onclick="Game.selectOperation('add')">
+        <span class="op-icon">➕</span>
+        <span class="op-name">Adição</span>
+        <div class="op-progress-mini" id="op-progress-add"></div>
+        <span class="op-level-badge" id="op-badge-add">Nível 1</span>
+      </button>
+      <button class="op-card op-sub" onclick="Game.selectOperation('sub')">
+        <span class="op-icon">➖</span>
+        <span class="op-name">Subtração</span>
+        <div class="op-progress-mini" id="op-progress-sub"></div>
+        <span class="op-level-badge" id="op-badge-sub">Nível 1</span>
+      </button>
+      <button class="op-card op-mul" onclick="Game.selectOperation('mul')">
+        <span class="op-icon">✖️</span>
+        <span class="op-name">Multiplicação</span>
+        <div class="op-progress-mini" id="op-progress-mul"></div>
+        <span class="op-level-badge" id="op-badge-mul">Nível 1</span>
+      </button>
+      <button class="op-card op-div" onclick="Game.selectOperation('div')">
+        <span class="op-icon">➗</span>
+        <span class="op-name">Divisão</span>
+        <div class="op-progress-mini" id="op-progress-div"></div>
+        <span class="op-level-badge" id="op-badge-div">Nível 1</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== TELA DO JOGO ===== -->
+  <div id="screen-game" class="screen">
+    <div class="game-topbar">
+      <button class="btn-back" onclick="Game.exitGame()">← Sair</button>
+      <div class="game-info">
+        <span class="info-chip" id="game-op-label">Adição</span>
+        <span class="info-chip" id="game-level-label">Nível 1</span>
+      </div>
+      <button class="sound-toggle-mini" onclick="Game.toggleSound()" id="sound-toggle-mini">🔊</button>
+      <button class="sound-toggle-mini" onclick="Game.toggleVoice()" id="voice-toggle-mini">🗣️</button>
+    </div>
+
+    <div class="game-stats-row">
+      <div class="stat-box">
+        <span class="stat-icon">⭐</span>
+        <span id="game-score">0</span>
+      </div>
+      <div class="stat-box streak-box">
+        <span class="stat-icon">🔥</span>
+        <span id="game-streak">0</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-icon">✅</span>
+        <span id="game-correct">0</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-icon">❌</span>
+        <span id="game-wrong">0</span>
+      </div>
+    </div>
+
+    <div class="xp-bar-container">
+      <div class="xp-bar-label">XP: <span id="game-xp">0</span> / <span id="game-xp-needed">100</span></div>
+      <div class="xp-bar-track">
+        <div class="xp-bar-fill" id="xp-bar-fill"></div>
+      </div>
+      <div class="level-to-go">Acertos para subir: <span id="consec-count">0</span>/5</div>
+    </div>
+
+    <div class="avatar-game" id="game-avatar">🐱</div>
+
+    <div class="question-card" id="question-card">
+      <div class="question-text" id="question-text">7 + 3 = ?</div>
+    </div>
+
+    <div class="answers-grid" id="answers-grid">
+      <!-- Gerado via JS -->
+    </div>
+
+    <div class="feedback-overlay" id="feedback-overlay">
+      <div class="feedback-content" id="feedback-content"></div>
+    </div>
+  </div>
+
+  <!-- ===== TELA DE PROGRESSO / MAPA ===== -->
+  <div id="screen-progress" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" onclick="UI.showScreen('screen-home')">← Voltar</button>
+      <h2>🗺️ Meu Progresso</h2>
+    </div>
+    <div class="progress-overall">
+      <div class="overall-circle">
+        <span id="overall-percent">0%</span>
+        <small>Concluído</small>
+      </div>
+    </div>
+    <div class="progress-ops" id="progress-ops">
+      <!-- Gerado via JS -->
+    </div>
+  </div>
+
+  <!-- ===== TELA DE RECOMPENSAS ===== -->
+  <div id="screen-rewards" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" onclick="UI.showScreen('screen-home')">← Voltar</button>
+      <h2>🏆 Recompensas</h2>
+    </div>
+    <div class="rewards-tabs">
+      <button class="tab-btn active" onclick="UI.showTab('medals')">🏅 Medalhas</button>
+      <button class="tab-btn" onclick="UI.showTab('trophies')">🏆 Troféus</button>
+      <button class="tab-btn" onclick="UI.showTab('achievements')">🎯 Conquistas</button>
+    </div>
+    <div class="tab-content" id="tab-medals"><!-- JS --></div>
+    <div class="tab-content hidden" id="tab-trophies"><!-- JS --></div>
+    <div class="tab-content hidden" id="tab-achievements"><!-- JS --></div>
+  </div>
+
+  <!-- ===== TELA DE AVATAR ===== -->
+  <div id="screen-avatar" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" onclick="UI.showScreen('screen-home')">← Voltar</button>
+      <h2>🐱 Meu Avatar</h2>
+    </div>
+    <p class="avatar-hint">Desbloqueie avatares completando desafios!</p>
+    <div class="avatars-grid" id="avatars-grid"><!-- JS --></div>
+  </div>
+
+  <!-- ===== TELA DOS RESPONSÁVEIS ===== -->
+  <div id="screen-parents" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" onclick="UI.showScreen('screen-home')">← Voltar</button>
+      <h2>👨‍👩‍👧 Painel dos Responsáveis</h2>
+    </div>
+    <div class="parents-grid" id="parents-grid"><!-- JS --></div>
+    <button class="btn btn-danger" onclick="UI.confirmReset()">🗑️ Resetar Progresso</button>
+  </div>
+
+  <!-- ===== MODAL LEVEL UP ===== -->
+  <div id="modal-levelup" class="modal hidden">
+    <div class="modal-box levelup-box">
+      <div class="levelup-anim">🎉</div>
+      <h2>Subiu de Nível!</h2>
+      <p id="levelup-text"></p>
+      <div class="stars-earned" id="stars-earned"></div>
+      <button class="btn btn-primary" onclick="UI.closeModal('modal-levelup')">Continuar! 🚀</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL CONQUISTA ===== -->
+  <div id="modal-achievement" class="modal hidden">
+    <div class="modal-box achievement-box">
+      <div class="achievement-icon" id="ach-icon">🎯</div>
+      <h2>Conquista Desbloqueada!</h2>
+      <p id="ach-name"></p>
+      <button class="btn btn-primary" onclick="UI.closeModal('modal-achievement')">Incrível! ✨</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL CONFIRMAÇÃO RESET ===== -->
+  <div id="modal-reset" class="modal hidden">
+    <div class="modal-box">
+      <h2>⚠️ Tem certeza?</h2>
+      <p>Todo o progresso será apagado!</p>
+      <div class="modal-buttons">
+        <button class="btn btn-danger" onclick="Storage.resetAll(); UI.closeModal('modal-reset'); location.reload()">Sim, apagar</button>
+        <button class="btn btn-secondary" onclick="UI.closeModal('modal-reset')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TELA FORMAS GEOMÉTRICAS ===== -->
+  <div id="screen-shapes" class="screen">
+    <div class="game-topbar">
+      <button class="btn-back" onclick="Shapes.exit()">← Sair</button>
+      <div class="game-info">
+        <span class="info-chip">🔷 Formas</span>
+        <span class="info-chip" id="shapes-level-label">Nível 1</span>
+      </div>
+      <span class="info-chip" id="shapes-streak-chip">🔥 0</span>
+    </div>
+    <div class="game-stats-row">
+      <div class="stat-box"><span class="stat-icon">✅</span><span id="shapes-correct">0</span></div>
+      <div class="stat-box streak-box"><span class="stat-icon">🔥</span><span id="shapes-streak">0</span></div>
+      <div class="stat-box"><span class="stat-icon">❌</span><span id="shapes-wrong">0</span></div>
+    </div>
+    <div class="shapes-question-area">
+      <p class="shapes-prompt" id="shapes-prompt">Qual é esta forma?</p>
+      <div class="shape-display" id="shape-display"><!-- SVG via JS --></div>
+      <p class="shapes-hint" id="shapes-hint"></p>
+    </div>
+    <div class="answers-grid" id="shapes-answers"><!-- JS --></div>
+    <div class="feedback-overlay" id="shapes-feedback-overlay">
+      <div class="feedback-content" id="shapes-feedback-content"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL ERROS DETALHADOS ===== -->
+  <div id="modal-errors" class="modal hidden">
+    <div class="modal-box modal-wide">
+      <h2>❌ Histórico de Erros</h2>
+      <div class="error-log-list" id="error-log-list"></div>
+      <button class="btn btn-secondary" style="margin-top:1rem" onclick="UI.closeModal('modal-errors')">Fechar</button>
+    </div>
+  </div>
+
+  <!-- Scripts — ordem importa -->
+  <script src="js/storage.js"></script>
+  <script src="js/levels.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/mascote.js"></script>
+  <script src="js/shapes.js"></script>
+  <script src="js/voice.js"></script>
+</body>
+</html>
