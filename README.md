@@ -1,6 +1,6 @@
 # 🌟 MatemáticaKids
 
-Jogo educativo de matemática para crianças de 6 a 12 anos.  
+Jogo educativo de matemática para crianças de 3 a 12 anos.  
 100% offline · HTML5 · CSS3 · JavaScript ES6+ · Sem dependências externas
 
 ---
@@ -138,4 +138,4 @@ O projeto é estático — funciona em qualquer hospedagem:
 
 ---
 
-*MatemáticaKids — aprender matemática pode (e deve!) ser divertido 🌈*
+*GabQuest — aprender matemática pode (e deve!) ser divertido 🌈*
