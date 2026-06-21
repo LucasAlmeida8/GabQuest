@@ -105,7 +105,7 @@ const Shapes = (() => {
   function _makeQuestion(level) {
     const pool = _shapesForLevel(level);
     const shape = _rnd(pool);
-    const mode = level === 1 ? 'name' : _rnd(['name','sides','color']);
+    const mode = level === 1 ? 'name' : _rnd(['name','sides']);
 
     let prompt, correct, allOpts;
 
@@ -147,9 +147,19 @@ const Shapes = (() => {
     _next();
   }
 
+  // --- Função _next atualizada com a trava contra repetição ---
   function _next() {
     _waiting = false;
-    _state.current = _makeQuestion(_state.level);
+    
+    let nextQ;
+    let tries = 0;
+    
+    do {
+      nextQ = _makeQuestion(_state.level);
+      tries++;
+    } while (tries < 10 && _state.current && nextQ.shape.id === _state.current.shape.id);
+
+    _state.current = nextQ;
     _render(_state.current);
   }
 
